@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.concurrent.TimeUnit;
 
 public class Controller {
 
@@ -16,12 +15,8 @@ public class Controller {
 
             coffeeDatagramSocket.start();
 
-        } catch (SocketException e) {
+        } catch (SocketException | UnknownHostException e) {
             e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException exception) {
-            exception.printStackTrace();
         }
     }
 

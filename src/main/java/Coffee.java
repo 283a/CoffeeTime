@@ -18,7 +18,7 @@ public class Coffee{
     }
 
     boolean one(){
-        return local && remote;
+        return local || remote;
     }
 
     public boolean isLocal() {
