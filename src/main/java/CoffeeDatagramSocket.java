@@ -3,15 +3,17 @@ import java.net.*;
 
 public class CoffeeDatagramSocket extends Thread{
     private DatagramSocket socket;
+    Coffee coffee;
     private InetAddress address;
     private boolean running;
 
     private byte[] buf;
 
-    public CoffeeDatagramSocket(int port, InetAddress address) throws SocketException, UnknownHostException {
+    public CoffeeDatagramSocket(int port, Coffee coffee) throws SocketException, UnknownHostException {
 //        socket = new DatagramSocket(4445);
         socket = new DatagramSocket(port);
-        this.address = address;
+        this.coffee = coffee;
+        this.address = coffee.getAddress();
         buf = new byte[1];
     }
 
@@ -26,6 +28,7 @@ public class CoffeeDatagramSocket extends Thread{
     public void receive() throws IOException {
         DatagramPacket packet =  new DatagramPacket(buf, buf.length);
         socket.receive(packet);
+        coffee.setRemote(true);
         System.out.println("received");
 //        buf = packet.getData();
     }

@@ -9,17 +9,12 @@ public class Controller {
     public static void main(String[] args) {
         try {
 
-            FrameIcon frameIcon = new FrameIcon();
-            CoffeeDatagramSocket coffeeDatagramSocket = new CoffeeDatagramSocket(4445, InetAddress.getLocalHost());
-            coffeeDatagramSocket.start();
-            while (true){
-                TimeUnit.SECONDS.sleep(1);
-                if(frameIcon.coffeeTime1 && frameIcon.coffeeTime2){
+            Coffee coffee = new Coffee(false,false,InetAddress.getByName("192.168.178.21"));
+            CoffeeDatagramSocket coffeeDatagramSocket = new CoffeeDatagramSocket(4445, coffee);
+            FrameIcon frameIcon = new FrameIcon(coffee,coffeeDatagramSocket);
+//            CoffeeDatagramSocket coffeeDatagramSocket = new CoffeeDatagramSocket(4445, InetAddress.getLocalHost());
 
-                    System.out.println(frameIcon.coffeeTime1 || frameIcon.coffeeTime2);
-                    coffeeDatagramSocket.send();
-                }
-            }
+            coffeeDatagramSocket.start();
 
         } catch (SocketException e) {
             e.printStackTrace();
@@ -27,8 +22,6 @@ public class Controller {
             e.printStackTrace();
         } catch (IOException exception) {
             exception.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
