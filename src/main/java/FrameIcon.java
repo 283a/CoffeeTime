@@ -37,7 +37,6 @@ class FrameIcon {
                 public void mouseClicked(MouseEvent e) {
                     System.out.println(e.getButton());
                     if(e.getButton() == MouseEvent.BUTTON1){
-                        coffee.setLocal(!coffee.isLocal());
                         try {
                             coffeeDatagramSocket.send();
                         } catch (IOException ex) {

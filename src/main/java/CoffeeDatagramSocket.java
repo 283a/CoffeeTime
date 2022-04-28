@@ -3,14 +3,13 @@ import java.net.*;
 
 public class CoffeeDatagramSocket extends Thread{
     private DatagramSocket socket;
-    Coffee coffee;
+    private Coffee coffee;
     private InetAddress address;
     private boolean running;
 
     private byte[] buf;
 
     public CoffeeDatagramSocket(int port, Coffee coffee) throws SocketException, UnknownHostException {
-//        socket = new DatagramSocket(4445);
         socket = new DatagramSocket(port);
         this.coffee = coffee;
         this.address = coffee.getAddress();
@@ -21,6 +20,7 @@ public class CoffeeDatagramSocket extends Thread{
         buf[0] = 1;
         DatagramPacket packet
                 = new DatagramPacket(buf, buf.length, address, 4445);
+        coffee.setLocal(!coffee.isLocal());
         socket.send(packet);
         System.out.println("send");
     }
@@ -28,9 +28,9 @@ public class CoffeeDatagramSocket extends Thread{
     public void receive() throws IOException {
         DatagramPacket packet =  new DatagramPacket(buf, buf.length);
         socket.receive(packet);
+        buf = packet.getData();
         coffee.setRemote(true);
         System.out.println("received");
-//        buf = packet.getData();
     }
 
     public void close() {

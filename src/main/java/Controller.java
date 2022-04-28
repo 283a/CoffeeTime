@@ -11,7 +11,6 @@ public class Controller {
             Coffee coffee = new Coffee(false,false,InetAddress.getByName("192.168.178.21"));
             CoffeeDatagramSocket coffeeDatagramSocket = new CoffeeDatagramSocket(4445, coffee);
             FrameIcon frameIcon = new FrameIcon(coffee,coffeeDatagramSocket);
-//            CoffeeDatagramSocket coffeeDatagramSocket = new CoffeeDatagramSocket(4445, InetAddress.getLocalHost());
 
             coffeeDatagramSocket.start();
 
