@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.IOException;
 import java.net.*;
 
@@ -9,7 +10,7 @@ public class CoffeeDatagramSocket extends Thread{
 
     private byte[] buf;
 
-    public CoffeeDatagramSocket(int port, Coffee coffee) throws SocketException, UnknownHostException {
+    public CoffeeDatagramSocket(int port, Coffee coffee) throws SocketException {
         socket = new DatagramSocket(port);
         this.coffee = coffee;
         this.address = coffee.getAddress();
@@ -17,12 +18,12 @@ public class CoffeeDatagramSocket extends Thread{
     }
 
     public void send() throws IOException {
-        buf[0] = 1;
+        buf[0] = (byte) (coffee.isLocal() ? 1 : 0 );
+        coffee.setLocal(!coffee.isLocal());
         DatagramPacket packet
                 = new DatagramPacket(buf, buf.length, address, 4445);
-        coffee.setLocal(!coffee.isLocal());
         socket.send(packet);
-        System.out.println("send");
+        System.out.println("send " + buf[0]);
     }
 
     public void receive() throws IOException {
@@ -30,7 +31,7 @@ public class CoffeeDatagramSocket extends Thread{
         socket.receive(packet);
         buf = packet.getData();
         coffee.setRemote(true);
-        System.out.println("received");
+        System.out.println("received " + buf[0]);
     }
 
     public void close() {

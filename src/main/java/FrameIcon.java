@@ -5,13 +5,13 @@ import java.io.IOException;
 
 class FrameIcon {
     private Coffee coffee;
-    private  CoffeeDatagramSocket coffeeDatagramSocket;
+    private CoffeeDatagramSocket coffeeDatagramSocket;
+    TrayIcon trayIcon = null;
 
-    public FrameIcon(Coffee coffee,CoffeeDatagramSocket coffeeDatagramSocket){
+    public FrameIcon(Coffee coffee, CoffeeDatagramSocket coffeeDatagramSocket) {
         this.coffee = coffee;
         this.coffeeDatagramSocket = coffeeDatagramSocket;
         if (SystemTray.isSupported()) {
-            final TrayIcon trayIcon;
 
             SystemTray tray = SystemTray.getSystemTray();
 
@@ -29,34 +29,35 @@ class FrameIcon {
 
 
             Image image = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("blackCoffee.png"));
-            trayIcon = new TrayIcon(image, "Coffee Time",popup);
+            trayIcon = new TrayIcon(image, "Coffee Time", popup);
 
             MouseListener mouseListener = new MouseListener() {
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     System.out.println(e.getButton());
-                    if(e.getButton() == MouseEvent.BUTTON1){
+                    if (e.getButton() == MouseEvent.BUTTON1) {
                         try {
                             coffeeDatagramSocket.send();
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
                         System.out.println("Tray Icon - Mouse clicked!");
-                        if(coffee.both()){
-                            trayIcon.setImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("greenCoffee.png")));
-                        }   else if(coffee.one()){
-                            trayIcon.setImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("orangeCoffee.png")));
-                        }   else {
-                            trayIcon.setImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("blackCoffee.png")));
-                        }
+                        trayIcon.setImage(getCoffeeIcon());
                     }
                 }
 
-                public void mouseEntered(MouseEvent e) {}
-                public void mouseExited(MouseEvent e) {}
-                public void mousePressed(MouseEvent e) {}
-                public void mouseReleased(MouseEvent e) {}
+                public void mouseEntered(MouseEvent e) {
+                }
+
+                public void mouseExited(MouseEvent e) {
+                }
+
+                public void mousePressed(MouseEvent e) {
+                }
+
+                public void mouseReleased(MouseEvent e) {
+                }
             };
 
             trayIcon.setImageAutoSize(true);
@@ -69,7 +70,20 @@ class FrameIcon {
             }
         }
 
-        SwingUtilities.invokeLater(() -> {});
+        SwingUtilities.invokeLater(() -> {
+        });
     }
 
+    public Image getCoffeeIcon() {
+        if (coffee.both()) {
+            return Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("greenCoffee.png"));
+        } else if (coffee.one()) {
+            return Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("orangeCoffee.png"));
+        }
+        return Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("blackCoffee.png"));
+    }
+
+    public void updateIcon(){
+        trayIcon.setImage(getCoffeeIcon());
+    }
 }
