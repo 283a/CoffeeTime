@@ -18,8 +18,8 @@ public class CoffeeDatagramSocket extends Thread{
     }
 
     public void send() throws IOException {
-        buf[0] = (byte) (coffee.isLocal() ? 1 : 0 );
         coffee.setLocal(!coffee.isLocal());
+        buf[0] = (byte) (coffee.isLocal() ? 1 : 0 );
         DatagramPacket packet
                 = new DatagramPacket(buf, buf.length, address, 4445);
         socket.send(packet);
@@ -30,7 +30,7 @@ public class CoffeeDatagramSocket extends Thread{
         DatagramPacket packet =  new DatagramPacket(buf, buf.length);
         socket.receive(packet);
         buf = packet.getData();
-        coffee.setRemote(true);
+        coffee.setRemote(buf[0] == 1 ? true : false);
         System.out.println("received " + buf[0]);
     }
 
