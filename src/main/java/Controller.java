@@ -10,7 +10,7 @@ public class Controller extends Thread{
     CoffeeDatagramSocket coffeeDatagramSocket;
 
     public Controller() throws UnknownHostException, SocketException {
-        this.coffee = new Coffee(false,false,InetAddress.getByName("192.168.178.26"));
+        this.coffee = new Coffee(false,false,InetAddress.getByName("192.168.178.21"));
         this.coffeeDatagramSocket = new CoffeeDatagramSocket(4445, coffee);
         this.frameIcon = new FrameIcon(coffee,coffeeDatagramSocket);
         coffeeDatagramSocket.start();
@@ -26,7 +26,27 @@ public class Controller extends Thread{
 
     @Override
     public void run() {
+
+        boolean prevLocal = coffee.isLocal();
+        boolean prevRemote = coffee.isRemote();
         while (true){
+//            System.out.println("=>" + (coffee.isLocal() != prevLocal) + " : " + coffee.isLocal() + " : " + prevLocal);
+//            if(coffee.isLocal() != prevLocal || coffee.isRemote() != prevRemote) {
+//                prevLocal = coffee.isLocal();
+//                prevRemote = coffee.isRemote();
+//                System.out.println("fuck");
+//
+//                try {
+//                    Thread.sleep(1800);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             frameIcon.updateIcon();
         }
     }
