@@ -1,21 +1,23 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
-class FrameIcon {
-    private Coffee coffee;
-    private CoffeeDatagramSocket coffeeDatagramSocket;
+
+public class CoffeeGui {
+
     TrayIcon trayIcon = null;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public FrameIcon(Coffee coffee, CoffeeDatagramSocket coffeeDatagramSocket) {
-        this.coffee = coffee;
-        this.coffeeDatagramSocket = coffeeDatagramSocket;
+    public CoffeeGui() {
         if (SystemTray.isSupported()) {
 
-            SystemTray tray = SystemTray.getSystemTray();
-
             ActionListener exitListener = e -> {
+                removeTrayIcon();
                 System.out.println("Exiting...");
                 System.exit(0);
             };
@@ -27,39 +29,28 @@ class FrameIcon {
             popup.add(defaultItem2);
             popup.add(defaultItem);
 
+            SystemTray tray = SystemTray.getSystemTray();
 
             Image image = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("blackCoffee.png"));
-            trayIcon = new TrayIcon(image, "Coffee Time", popup);
-
+            trayIcon = new TrayIcon(image, "Coffee Time",popup);
             MouseListener mouseListener = new MouseListener() {
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    System.out.println(e.getButton());
                     if (e.getButton() == MouseEvent.BUTTON1) {
-                        try {
-                            coffeeDatagramSocket.send();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                        System.out.println("Tray Icon - Mouse clicked!");
-                        trayIcon.setImage(getCoffeeIcon());
+                        PropertyChangeEvent evt = new PropertyChangeEvent(this, "UI", 1, 0);
+                        pcs.firePropertyChange(evt);
                     }
                 }
-
                 public void mouseEntered(MouseEvent e) {
                 }
-
                 public void mouseExited(MouseEvent e) {
                 }
-
                 public void mousePressed(MouseEvent e) {
                 }
-
                 public void mouseReleased(MouseEvent e) {
                 }
             };
-
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(mouseListener);
 
@@ -69,21 +60,25 @@ class FrameIcon {
                 System.err.println("TrayIcon could not be added.");
             }
         }
-
-        SwingUtilities.invokeLater(() -> {
-        });
     }
 
-    public Image getCoffeeIcon() {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    public void updateCoffeeIcon(Coffee coffee){
         if (coffee.both()) {
-            return Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("greenCoffee.png"));
+            trayIcon.setImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("greenCoffee.png")));
         } else if (coffee.one()) {
-            return Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("orangeCoffee.png"));
+            trayIcon.setImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("orangeCoffee.png")));
+        } else{
+            trayIcon.setImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("blackCoffee.png")));
         }
-        return Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("blackCoffee.png"));
     }
 
-    public void updateIcon(){
-        trayIcon.setImage(getCoffeeIcon());
+    public void removeTrayIcon(){
+            SystemTray tray = SystemTray.getSystemTray();
+            tray.remove(trayIcon);
     }
+
 }

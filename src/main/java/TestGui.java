@@ -1,14 +1,26 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 
-public class TestGui extends JFrame implements Runnable {
-    TestSocket socket1 = new TestSocket(4445,4446,0);
-    TestSocket socket2 = new TestSocket(4446,4445,1);
+public class TestGui extends JFrame implements Runnable{
+    CoffeeSocket socket1 = new CoffeeSocket(4445);
+    CoffeeSocket socket2 = new CoffeeSocket(4446);
+
+
     public TestGui() throws SocketException {
+        socket1.addPropertyChangeListener(new PropertyChangeListener(){
+            public void propertyChange(PropertyChangeEvent pce) {
+                System.out.println("Wtfffffffffffffffffffffffffffffffffffffffffff");
+        }});
+        socket2.addPropertyChangeListener(new PropertyChangeListener(){
+            public void propertyChange(PropertyChangeEvent pce) {
+                System.out.println("LLLLLLLLLLLLLLLLLLLLLLOooooooooooooooooooooLLLLLLLLL");
+            }});
         setLayout(new GridLayout());
         setTitle("My Gui");
         setSize(400, 400);
@@ -17,7 +29,7 @@ public class TestGui extends JFrame implements Runnable {
         JButton jButton = new JButton("socket1");
         jButton.addActionListener(e -> {
             try {
-                socket1.send();
+                socket1.send(new InetSocketAddress(InetAddress.getLocalHost(),4446));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -25,7 +37,7 @@ public class TestGui extends JFrame implements Runnable {
         JButton jButton2 = new JButton("socket2");
         jButton2.addActionListener(e -> {
             try {
-                socket2.send();
+                socket2.send(new InetSocketAddress(InetAddress.getLocalHost(),4445));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
