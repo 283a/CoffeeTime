@@ -1,19 +1,15 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 
 public class CoffeeGui {
-
+    private Coffee coffee;
     TrayIcon trayIcon = null;
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public CoffeeGui() {
+    public CoffeeGui(Coffee coffee) {
+        this.coffee = coffee;
         if (SystemTray.isSupported()) {
 
             ActionListener exitListener = e -> {
@@ -38,8 +34,8 @@ public class CoffeeGui {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getButton() == MouseEvent.BUTTON1) {
-                        PropertyChangeEvent evt = new PropertyChangeEvent(this, "UI", 1, 0);
-                        pcs.firePropertyChange(evt);
+                        coffee.setLocal(!coffee.isLocal());
+                        updateCoffeeIcon();
                     }
                 }
                 public void mouseEntered(MouseEvent e) {
@@ -62,11 +58,7 @@ public class CoffeeGui {
         }
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
-    }
-
-    public void updateCoffeeIcon(Coffee coffee){
+    public void updateCoffeeIcon(){
         if (coffee.both()) {
             trayIcon.setImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("greenCoffee.png")));
         } else if (coffee.one()) {
