@@ -27,17 +27,15 @@ public class Controller {
         this.coffeeGui = new CoffeeGui(coffee);
         this.inetSocketAddress = new InetSocketAddress(InetAddress.getLocalHost(), 4446);
 
-        coffee.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent pce) {
-                if (pce.getPropertyName().equals("remote")) {
-                    coffeeGui.updateCoffeeIcon();
-                } else if (pce.getPropertyName().equals("local")) {
-                    coffeeSocket.setBuf(new byte[]{(byte) (coffee.isLocal() ? 1 : 0)});
-                    try {
-                        coffeeSocket.send(inetSocketAddress);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        coffee.addPropertyChangeListener(pce -> {
+            if (pce.getPropertyName().equals("remote")) {
+                coffeeGui.updateCoffeeIcon();
+            } else if (pce.getPropertyName().equals("local")) {
+                coffeeSocket.setBuf(new byte[]{(byte) (coffee.isLocal() ? 1 : 0)});
+                try {
+                    coffeeSocket.send(inetSocketAddress);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
