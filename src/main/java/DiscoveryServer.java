@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.net.*;
-import java.util.logging.Logger;
 
 public class DiscoveryServer implements Runnable{
 
@@ -14,14 +13,15 @@ public class DiscoveryServer implements Runnable{
         DatagramSocket socket = null;
         InetAddress addr = null;
         try {
-            addr = InetAddress.getByName( "0.0.0.0" );
+//            addr = InetAddress.getByName( "0.0.0.0" );
+            addr = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
 
         try {
             socket = new DatagramSocket(8887, addr);
-            socket.setBroadcast(true);
+//            socket.setBroadcast(true);
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -34,9 +34,17 @@ public class DiscoveryServer implements Runnable{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            byte[] bb = packet.getData();
+            System.out.println(bb[0]);
+//            System.out.println(getBit(0,bb[0]));
+//            System.out.println(getBit(1,bb[0]));
             InetAddress clientAddress = packet.getAddress();
             int clientPort = packet.getPort();
             System.out.println("address " + clientAddress.toString() + " port " + clientPort);
         }
+    }
+    public short getBit(int position,byte b)
+    {
+        return (short) ((b >> position) & 1);
     }
 }

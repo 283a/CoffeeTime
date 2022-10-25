@@ -1,18 +1,18 @@
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.net.InetAddress;
 
 public class Coffee{
 
-    boolean local;
-    boolean remote;
+    private boolean local;
+    private boolean remote;
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public Coffee(boolean local, boolean remote) {
         this.local = local;
         this.remote = remote;
-
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -41,9 +41,11 @@ public class Coffee{
         return remote;
     }
 
+
     public void setRemote(boolean remote) {
         PropertyChangeEvent evt = new PropertyChangeEvent(this, "remote", this.remote, remote);
         this.remote = remote;
         pcs.firePropertyChange(evt);
     }
+
 }

@@ -1,14 +1,17 @@
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 
 public class CoffeeGui {
-    private Coffee coffee;
+    private final Coffee coffee;
     TrayIcon trayIcon = null;
 
     public CoffeeGui(Coffee coffee) {
+
         this.coffee = coffee;
         if (SystemTray.isSupported()) {
 
@@ -19,8 +22,9 @@ public class CoffeeGui {
             };
 
             PopupMenu popup = new PopupMenu();
-            MenuItem defaultItem2 = new MenuItem("IP: 12431412241");
-            MenuItem defaultItem = new MenuItem("Quit");
+
+            MenuItem defaultItem2 = new MenuItem("Settings");
+            MenuItem defaultItem = new MenuItem("Exit");
             defaultItem.addActionListener(exitListener);
             popup.add(defaultItem2);
             popup.add(defaultItem);
@@ -49,7 +53,14 @@ public class CoffeeGui {
             };
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(mouseListener);
-
+            defaultItem2.addActionListener(e -> {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        new SettingsGui();
+                    }
+                });
+            });
             try {
                 tray.add(trayIcon);
             } catch (AWTException e) {

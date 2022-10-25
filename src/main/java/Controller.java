@@ -1,17 +1,18 @@
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class Controller {
+public class Controller implements ActionListener {
 
-    private Coffee coffee;
+    private final Coffee coffee;
     private CoffeeSocket coffeeSocket;
-    private CoffeeGui coffeeGui;
+    private final CoffeeGui coffeeGui;
     private InetSocketAddress inetSocketAddress;
+    private int port;
 
     public void setCoffeeSocket(CoffeeSocket coffeeSocket) {
         this.coffeeSocket = coffeeSocket;
@@ -22,8 +23,9 @@ public class Controller {
     }
 
     public Controller(int port) throws SocketException, UnknownHostException {
+        this.port = port;
         this.coffee = new Coffee(false, false);
-        this.coffeeSocket = new CoffeeSocket(port, coffee);
+        this.coffeeSocket = new CoffeeSocket(coffee, port);
         this.coffeeGui = new CoffeeGui(coffee);
         this.inetSocketAddress = new InetSocketAddress(InetAddress.getLocalHost(), 4446);
 
@@ -42,6 +44,18 @@ public class Controller {
 
     }
 
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public InetSocketAddress getInetSocketAddress() {
+        return inetSocketAddress;
+    }
+
     public void start() {
         coffeeSocket.start();
     }
@@ -54,4 +68,8 @@ public class Controller {
         controller2.start();
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("why tho??");
+    }
 }

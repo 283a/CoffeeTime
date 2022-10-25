@@ -3,11 +3,11 @@ import java.net.*;
 
 public class CoffeeSocket extends Thread {
     private byte[] buf;
-    private DatagramSocket socket;
-    private Coffee coffee;
+    private final DatagramSocket socket;
+    private final Coffee coffee;
 
 
-    public CoffeeSocket(int port, Coffee coffee) throws SocketException {
+    public CoffeeSocket(Coffee coffee, int port) throws SocketException {
         this.coffee = coffee;
         buf = new byte[1];
         socket = new DatagramSocket(port);
@@ -23,8 +23,7 @@ public class CoffeeSocket extends Thread {
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
         socket.receive(packet);
         buf = packet.getData();
-
-        coffee.setRemote(buf[0] == 1 ? true : false);
+        coffee.setRemote(buf[0] == 1);
     }
 
     public void close() {

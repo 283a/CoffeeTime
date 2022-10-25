@@ -1,14 +1,16 @@
-import java.io.IOException;
 import java.net.*;
-import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DiscoveryClient{
 
     public static void main(String[] args) throws Exception {
         DatagramSocket socket = null;
         byte[] receiveBuffer = new byte[1];
+        byte byte1 = 2;
+//        System.out.println();
+//        byte1 = (byte) (byte1 | ~(1 << 0));
+//        byte1 = (byte) (byte1 | ~(1 << 1));
+        receiveBuffer[0] = byte1;
+
         DatagramPacket receivePacket = new DatagramPacket(receiveBuffer,
                 receiveBuffer.length);
 
