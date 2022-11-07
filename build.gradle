@@ -18,11 +18,19 @@ dependencies {
 
 
 
-application {
-    mainClass = 'src.main.java.Controller'
+jar {
+    manifest {
+        attributes "Main-Class": "Controller"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
-
+application {
+    mainClassName = 'Controller'
+}
 
 test {
     useJUnitPlatform()

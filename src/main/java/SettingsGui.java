@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class SettingsGui extends JFrame{
 
-    private File configFile = new File("src/main/resources/config.properties");
+    private File configFile = new File("config.properties");
     private Properties configProps;
 
     private JLabel labelIP = new JLabel("IP Address: ");
