@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.util.Properties;
 
 public class SettingsGui extends JFrame{
@@ -16,8 +17,11 @@ public class SettingsGui extends JFrame{
 
     private JButton buttonSave = new JButton("Save");
 
-    public SettingsGui() {
+    private final Controller controller;
+
+    public SettingsGui(Controller controller) {
         super("Settings");
+        this.controller = controller;
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
@@ -104,6 +108,8 @@ public class SettingsGui extends JFrame{
         configProps.setProperty("ip", textIP.getText());
         configProps.setProperty("port", textPort.getText());
 
+        controller.setInetSocketAddress(new InetSocketAddress(configProps.getProperty("ip"), Integer.parseInt(configProps.getProperty("port"))));
+        System.out.println("" + controller.getInetSocketAddress().toString());
         OutputStream outputStream = new FileOutputStream(configFile);
         configProps.store(outputStream, "IP settings");
         outputStream.close();

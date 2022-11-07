@@ -10,9 +10,9 @@ public class CoffeeGui {
     private final Coffee coffee;
     TrayIcon trayIcon = null;
 
-    public CoffeeGui(Coffee coffee) {
+    public CoffeeGui(Controller controller) {
 
-        this.coffee = coffee;
+        this.coffee = controller.getCoffee();
         if (SystemTray.isSupported()) {
 
             ActionListener exitListener = e -> {
@@ -57,7 +57,7 @@ public class CoffeeGui {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        new SettingsGui();
+                        new SettingsGui(controller);
                     }
                 });
             });

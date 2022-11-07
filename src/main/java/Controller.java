@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class Controller implements ActionListener {
+public class Controller{
 
     private final Coffee coffee;
     private CoffeeSocket coffeeSocket;
@@ -25,9 +25,10 @@ public class Controller implements ActionListener {
     public Controller(int port) throws SocketException, UnknownHostException {
         this.port = port;
         this.coffee = new Coffee(false, false);
-        this.coffeeSocket = new CoffeeSocket(coffee, port);
-        this.coffeeGui = new CoffeeGui(coffee);
         this.inetSocketAddress = new InetSocketAddress(InetAddress.getLocalHost(), 4446);
+        this.coffeeSocket = new CoffeeSocket(coffee, port);
+        this.coffeeGui = new CoffeeGui(this);
+
 
         coffee.addPropertyChangeListener(pce -> {
             if (pce.getPropertyName().equals("remote")) {
@@ -48,13 +49,14 @@ public class Controller implements ActionListener {
         return port;
     }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public InetSocketAddress getInetSocketAddress() {
         return inetSocketAddress;
     }
+
+    public Coffee getCoffee() {
+        return coffee;
+    }
+
 
     public void start() {
         coffeeSocket.start();
@@ -68,8 +70,4 @@ public class Controller implements ActionListener {
         controller2.start();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("why tho??");
-    }
 }
