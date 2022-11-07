@@ -64,10 +64,7 @@ public class Controller{
 
     public static void main(String[] args) throws SocketException, UnknownHostException {
         Controller controller1 = new Controller(4445);
-        Controller controller2 = new Controller(4446);
-        controller2.setInetSocketAddress(new InetSocketAddress(InetAddress.getLocalHost(), 4445));
         controller1.start();
-        controller2.start();
     }
 
 }
