@@ -1,3 +1,3 @@
 # CoffeeTime
 
-P2P notifyer for :coffee:
+P2P notifier for :coffee:
